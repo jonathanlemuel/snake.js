@@ -1,5 +1,7 @@
-(function (root) {
-  var SG = root.SG = (root.SG || {});
+(function () {
+  if (typeof SG === "undefined") {
+    window.SG = {};
+  }
 
   var Coord = SG.Coord = function (i, j) {
     this.i = i;
@@ -108,4 +110,4 @@
     // join it up
     return _(grid).map(function (row) { return row.join(""); }).join("\n");
   };
-})(this);
+})();

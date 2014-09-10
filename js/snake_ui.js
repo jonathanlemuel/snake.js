@@ -1,5 +1,7 @@
-(function (root) {
-  var SG = root.SG = (root.SG || {});
+(function () {
+  if (typeof SG === "undefined") {
+    window.SG = {};
+  }
 
   var View = SG.View = function ($el) {
     this.$el = $el;
@@ -75,4 +77,4 @@
       View.STEP_MILLIS
     );
   };
-})(this);
+})();
