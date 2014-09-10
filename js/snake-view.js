@@ -6,9 +6,14 @@
   var View = SG.View = function ($el) {
     this.$el = $el;
 
-    this.board = null;
-    this.intervalId = null;
-  }
+    this.board = new SG.Board(20);
+    this.intervalId = window.setInterval(
+      this.step.bind(this),
+      View.STEP_MILLIS
+    );
+
+    $(window).on("keydown", this.handleKeyEvent.bind(this));
+  };
 
   View.KEYS = {
     38: "N",
@@ -71,16 +76,5 @@
       alert("You lose!");
       window.clearInterval(this.intervalId);
     }
-  };
-
-  View.prototype.start = function () {
-    this.board = new SG.Board(20);
-
-    $(window).on("keydown", this.handleKeyEvent.bind(this));
-
-    this.intervalId = window.setInterval(
-      this.step.bind(this),
-      View.STEP_MILLIS
-    );
   };
 })();
