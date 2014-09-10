@@ -20,7 +20,7 @@
   View.STEP_MILLIS = 100;
 
   View.prototype.handleKeyEvent = function (event) {
-    if (_(View.KEYS).has(event.keyCode)) {
+    if (View.KEYS[event.keyCode]) {
       this.board.snake.turn(View.KEYS[event.keyCode]);
     } else {
       // some other key was pressed; ignore.
@@ -34,31 +34,37 @@
     var view = this;
     var board = view.board;
 
-    function buildCellsMatrix () {
-      return _.times(board.dim, function () {
-        return _.times(board.dim, function () {
-          return $('<div class="cell"></div>');
-        });
-      });
-    }
-
     var cellsMatrix = buildCellsMatrix();
-    _(board.snake.segments).each(function (seg) {
+    board.snake.segments.forEach(function (seg) {
       cellsMatrix[seg.i][seg.j].addClass("snake");
     });
 
     cellsMatrix[board.apple.position.i][board.apple.position.j].addClass("apple");
 
     this.$el.empty();
-    _(cellsMatrix).each(function (row) {
+    cellsMatrix.forEach(function (row) {
       var $rowEl = $('<div class="row"></div>');
-      _(row).each(function ($cell) { $rowEl.append($cell) });
+      row.forEach(function ($cell) { $rowEl.append($cell) });
       view.$el.append($rowEl);
     });
+
+    // sometimes we put helper functions down at the bottom.
+    function buildCellsMatrix () {
+      var cellsMatrix = [];
+      for (var i = 0; i < board.dim; i++) {
+        var cellsRow = [];
+        for (var j = 0; j < board.dim; j++) {
+          cellsRow.push($('<div class="cell"></div>'));
+        }
+        cellsMatrix.push(cellsRow);
+      }
+
+      return cellsMatrix;
+    }
   };
 
   View.prototype.step = function () {
-    if (_(this.board.snake.segments).last()) {
+    if (this.board.snake.segments.length > 0) {
       this.board.snake.move();
       this.render();
     } else {
@@ -70,7 +76,7 @@
   View.prototype.start = function () {
     this.board = new SG.Board(20);
 
-    $(window).keydown(this.handleKeyEvent.bind(this));
+    $(window).on("keydown", this.handleKeyEvent.bind(this));
 
     this.intervalId = window.setInterval(
       this.step.bind(this),
