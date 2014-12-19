@@ -1,23 +1,24 @@
+<!DOCTYPE html>
 <html>
   <head>
-    <title>Great snakes!</title>
-
-    <script type="text/javascript"
-             src="../js/jquery-1.9.1.js"></script>
-    <script type="text/javascript"
-             src="../js/underscore.js"></script>
-    <script type="text/javascript"
-             src="../js/snake.js"></script>
-    <script type="text/javascript"
-             src="../js/snake-view.js"></script>
-    <link rel="stylesheet" href="../css/snake.css"></link>
+    <meta charset="utf-8">
+    <title>Snake</title>
+    <link rel="stylesheet" type="text/css" href="../css/snake.css">
   </head>
 
   <body>
-    <div id="grid"></div>
+    <h1>Snake</h1>
+
+    <figure class="snake-game"></figure>
+
+    <script src="../js/jquery-1.9.1.js"></script>
+    <script src="../js/snake.js"></script>
+    <script src="../js/snake-view.js"></script>
 
     <script>
-      $(function () { new SG.View($("#grid")); });
+      $(function () {
+        new SG.View($(".snake-game"));
+      });
     </script>
   </body>
 </html>

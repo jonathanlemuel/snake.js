@@ -7,6 +7,8 @@
     this.$el = $el;
 
     this.board = new SG.Board(20);
+    this.setupGrid();
+
     this.intervalId = window.setInterval(
       this.step.bind(this),
       View.STEP_MILLIS
@@ -36,36 +38,32 @@
     // simple text based rendering
     // this.$el.html(this.board.render());
 
-    var view = this;
-    var board = view.board;
+    this.updateClasses(this.board.snake.segments, "snake");
+    this.updateClasses([this.board.apple.position], "apple");
+  };
 
-    var cellsMatrix = buildCellsMatrix();
-    board.snake.segments.forEach(function (seg) {
-      cellsMatrix[seg.i][seg.j].addClass("snake");
-    });
+  View.prototype.updateClasses = function(coords, className) {
+    this.$li.filter("." + className).removeClass();
 
-    cellsMatrix[board.apple.position.i][board.apple.position.j].addClass("apple");
+    coords.forEach(function(coord){
+      var flatCoord = (coord.i * this.board.dim) + coord.j;
+      this.$li.eq(flatCoord).addClass(className);
+    }.bind(this));
+  };
 
-    this.$el.empty();
-    cellsMatrix.forEach(function (row) {
-      var $rowEl = $('<div class="row"></div>');
-      row.forEach(function ($cell) { $rowEl.append($cell) });
-      view.$el.append($rowEl);
-    });
+  View.prototype.setupGrid = function () {
+    var html = "";
 
-    // sometimes we put helper functions down at the bottom.
-    function buildCellsMatrix () {
-      var cellsMatrix = [];
-      for (var i = 0; i < board.dim; i++) {
-        var cellsRow = [];
-        for (var j = 0; j < board.dim; j++) {
-          cellsRow.push($('<div class="cell"></div>'));
-        }
-        cellsMatrix.push(cellsRow);
+    for (var i = 0; i < this.board.dim; i++) {
+      html += "<ul>";
+      for (var j = 0; j < this.board.dim; j++) {
+        html += "<li></li>";
       }
-
-      return cellsMatrix;
+      html += "</ul>";
     }
+
+    this.$el.html(html);
+    this.$li = this.$el.find("li");
   };
 
   View.prototype.step = function () {
